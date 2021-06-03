@@ -1,12 +1,28 @@
 import os
+import time
 import shutil
 
-source = input("enter source folder name:- ")
-destination = input('enter destination folder name:- ')
+path = input("Enter your desired path: ")
 
-source = source + '/'
-destination = destination + '/'
+days = 30
+seconds = time.time() - (days * 24 * 60 * 60)
 
-list_of_files = os.listdir(source)
-for file in list_of_files:
-    shutil.copy((source+file), destination)
+if os.path.exists(path):
+    for root, dirs, files in os.walk(path, topdown=True):
+        for name in files:
+            path = os.path.join(root, name)
+            ctime = os.stat(path).st_ctime
+
+            if seconds >= ctime:
+                os.remove(path)
+                print("path has been deleted" + path + " successfully")
+
+        for name in dirs:
+            path = os.path.join(root, name)
+            ctime = os.stat(path).st_ctime
+
+            if seconds >= ctime:
+                shutil.rmtree(path)
+                print(" path deleted " + path + " successfully")
+else:
+    print("Path you have given is anavailable")
